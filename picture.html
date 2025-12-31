@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生ビジネスパートナー募集 | しずおかコネクト</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- 追加：背景の色のゆらぎ（オーロラ効果） --- */
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-overlay {
+            background: linear-gradient(-45deg, rgba(15, 23, 42, 0.9), rgba(28, 55, 120, 0.85), rgba(15, 23, 42, 0.9), rgba(30, 64, 175, 0.8));
+            background-size: 400% 400%;
+            animation: gradient-flow 15s ease infinite;
+        }
+
+        /* --- 追加：舞い上がる光の粒子 --- */
+        @keyframes rise-up {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            20% { opacity: 0.6; }
+            80% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+        }
+        .particles span {
+            position: absolute;
+            bottom: -50px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: rise-up 10s infinite linear;
+        }
+        /* 粒子の個別の動き設定 */
+        .particles span:nth-child(1) { width: 20px; height: 20px; left: 10%; animation-duration: 12s; animation-delay: 0s; }
+        .particles span:nth-child(2) { width: 40px; height: 40px; left: 30%; animation-duration: 15s; animation-delay: 2s; }
+        .particles span:nth-child(3) { width: 10px; height: 10px; left: 50%; animation-duration: 8s; animation-delay: 4s; }
+        .particles span:nth-child(4) { width: 30px; height: 30px; left: 70%; animation-duration: 18s; animation-delay: 1s; }
+        .particles span:nth-child(5) { width: 15px; height: 15px; left: 90%; animation-duration: 10s; animation-delay: 3s; }
+        body { 
+            font-family: 'Noto Sans JP', sans-serif; 
+            background-color: #f8fafc;
+            color: #334155;
+            overflow-x: hidden; /* 横スクロール防止 */
+        }
+
+        /* --- アニメーション定義 --- */
+
+        /* 1. 背景画像のゆっくりズーム＆パン（Ken Burns効果） */
+        @keyframes kenburns {
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.1) translate(-2%, -1%); }
+            100% { transform: scale(1) translate(0, 0); }
+        }
+        .kenburns-bg {
+            animation: kenburns 30s ease-in-out infinite alternate;
+        }
+
+        /* 2. ふわふわ浮遊＆回転 */
+        @keyframes float-rotate {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        .floating {
+            animation: float-rotate 8s ease-in-out infinite;
+        }
+
+        /* 3. テキストのキラキラ光るエフェクト */
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        .text-shimmer {
+            background: linear-gradient(to right, #3b82f6 20%, #a5f3fc 50%, #3b82f6 80%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 4s linear infinite;
+        }
+
+        /* 4. 上下バウンド（矢印用） */
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .bounce-slow {
+            animation: bounce-slow 2s ease-in-out infinite;
+        }
+
+        /* 5. 脈打つような強調（ボタン用） */
+        @keyframes pulse-blue {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+        .pulse-btn {
+            animation: pulse-blue 2s infinite;
+        }
+
+        /* 6. スクロール連動フェードイン（初期状態：隠す） */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        /* 画面に入った時の状態（表示） */
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* 順番に表示させるための遅延 */
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="relative min-h-[90vh] flex items-center justify-center text-white px-4 overflow-hidden bg-slate-900">
+        <div class="absolute inset-0 w-full h-full overflow-hidden">
+            <div class="kenburns-bg absolute inset-0 w-full h-full bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1497366754035-48c702a7cec3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-blue-900/80 to-slate-900/90 mix-blend-multiply"></div>
+        </div>
+
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="floating absolute -top-20 -left-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl mix-blend-screen" style="animation-delay: -2s;"></div>
+            <div class="floating absolute bottom-0 right-0 w-80 h-80 bg-cyan-400/20 rounded-full blur-3xl mix-blend-screen" style="animation-delay: -4s;"></div>
+        </div>
+
+        <div class="max-w-4xl mx-auto text-center z-10">
+            <div class="animate-on-scroll is-visible">
+                <span class="inline-block py-1 px-4 rounded-full bg-white/10 border border-white/20 text-blue-200 text-xs font-bold mb-6 tracking-widest backdrop-blur-sm">
+                    BUSINESS PARTNERSHIP
+                </span>
+            </div>
+            <h1 class="animate-on-scroll is-visible delay-100 text-4xl md:text-6xl font-black mb-8 leading-tight tracking-tight drop-shadow-lg">
+                時給で働くのは、もう終わり。<br>
+                <span class="text-shimmer">「プロ」として稼ぐ</span><br>
+                実践型インターン。
+            </h1>
+            <p class="animate-on-scroll is-visible delay-200 text-lg md:text-xl text-slate-200 mb-12 max-w-2xl mx-auto leading-relaxed font-medium drop-shadow-sm">
+                場所も時間も、あなたの自由。<br>
+                成果がそのまま「報酬」と「実績」になる、新しい働き方。
+            </p>
+            
+            <div class="animate-on-scroll is-visible delay-300">
+                <a href="#entry" class="inline-flex items-center bg-white text-blue-600 font-bold py-4 px-12 rounded-full shadow-xl hover:shadow-blue-500/50 hover:-translate-y-1 transform transition-all duration-300 group pulse-btn text-lg">
+                    エントリー詳細を見る
+                    <i class="fas fa-arrow-down ml-3 group-hover:translate-y-1 transition-transform"></i>
+                </a>
+            </div>
+
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white/50 bounce-slow">
+                <i class="fas fa-chevron-down text-3xl"></i>
+            </div>
+        </div>
+    </header>
+
+    <section class="py-24 px-4 -mt-10 relative z-20">
+        <div class="max-w-5xl mx-auto bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-8 md:p-12 border border-slate-100 animate-on-scroll">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-12 text-slate-800">
+                なぜ「アルバイト」ではないのか？
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-4 md:gap-8">
+                <div class="bg-slate-50 p-8 rounded-2xl border border-slate-200 transition-transform hover:scale-[1.02] duration-300">
+                    <div class="flex items-center justify-center w-16 h-16 bg-slate-200 text-slate-400 rounded-full mb-6 mx-auto text-2xl">
+                        <i class="fas fa-user-clock"></i>
+                    </div>
+                    <h3 class="text-center text-lg font-bold text-slate-500 mb-6">一般的なアルバイト</h3>
+                    <ul class="space-y-4 text-slate-500 inline-block m-auto">
+                        <li class="flex items-center"><i class="fas fa-times-circle text-red-400 w-5 h-5 mr-3"></i> 時間・場所に縛られる</li>
+                        <li class="flex items-center"><i class="fas fa-times-circle text-red-400 w-5 h-5 mr-3"></i> 成果を出しても時給は固定</li>
+                    </ul>
+                </div>
+
+                <div class="bg-gradient-to-br from-blue-50 to-cyan-50 p-8 rounded-2xl border-2 border-blue-200 relative shadow-lg transform md:-translate-y-4 transition-all hover:scale-[1.03] duration-300 hover:shadow-xl">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-sm px-4 py-1 font-bold rounded-full shadow-md uppercase tracking-wider">
+                        Recruiting Now
+                    </div>
+                    <div class="flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-6 mx-auto text-2xl shadow-inner">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3 class="text-center text-xl font-bold text-blue-900 mb-6">ビジネスパートナー（業務委託）</h3>
+                    <ul class="space-y-4 text-slate-700 inline-block m-auto font-bold">
+                        <li class="flex items-center"><i class="fas fa-check-circle text-blue-500 w-6 h-6 mr-3"></i> 完全自由（リモート・出社自由）</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-blue-500 w-6 h-6 mr-3"></i> 成果次第で報酬は青天井</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-blue-500 w-6 h-6 mr-3"></i> 就活で語れる強い「実績」になる</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="mt-8 text-center text-xs text-slate-500 animate-on-scroll delay-200">
+                ※本契約は雇用契約ではなく、個人事業主としての「業務委託契約」となります。<br>プロフェッショナルとしての裁量を最大限に尊重します。
+            </p>
+        </div>
+    </section>
+
+    <section class="py-24 px-4 overflow-hidden">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-16 animate-on-scroll">
+                <span class="text-blue-600 font-bold tracking-widest text-sm uppercase">Simple Work Flow</span>
+                <h2 class="text-4xl font-black mt-2 text-slate-800">やることは、たったこれだけ。</h2>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8 relative">
+                <div class="hidden md:block absolute top-1/2 left-0 w-full h-[2px] bg-slate-200 -z-10 transform -translate-y-1/2 animate-on-scroll"></div>
+
+                <div class="bg-white p-8 w-full md:w-1/3 rounded-3xl shadow-md border border-slate-100 text-center transition-all hover:-translate-y-2 hover:shadow-xl duration-300 animate-on-scroll delay-100">
+                    <div class="w-14 h-14 bg-slate-800 text-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-xl font-bold rotate-3">1</div>
+                    <h3 class="font-bold text-xl mb-3 text-slate-800">電話・ヒアリング</h3>
+                    <p class="text-slate-500">リストへの架電。<br>企業の状況をヒアリングします。</p>
+                </div>
+
+                <div class="md:hidden text-slate-300 text-3xl bounce-slow animate-on-scroll delay-150"><i class="fas fa-arrow-down"></i></div>
+
+                <div class="bg-white p-8 w-full md:w-1/3 rounded-3xl shadow-md border border-slate-100 text-center transition-all hover:-translate-y-2 hover:shadow-xl duration-300 animate-on-scroll delay-200">
+                    <div class="w-14 h-14 bg-slate-800 text-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-xl font-bold -rotate-3">2</div>
+                    <h3 class="font-bold text-xl mb-3 text-slate-800">興味付け</h3>
+                    <p class="text-slate-500">用意された台本通りに話し、<br>興味を持っていただきます。</p>
+                </div>
+
+                <div class="md:hidden text-slate-300 text-3xl bounce-slow animate-on-scroll delay-250"><i class="fas fa-arrow-down"></i></div>
+
+                <div class="bg-gradient-to-br from-blue-600 to-blue-500 p-8 w-full md:w-1/3 rounded-3xl shadow-lg shadow-blue-200/50 text-center text-white relative transition-all hover:-translate-y-2 hover:shadow-2xl duration-300 animate-on-scroll delay-300">
+                    <div class="absolute -top-4 right-4 bg-yellow-400 text-blue-900 text-xs font-bold px-3 py-1 rounded-full shadow-sm bounce-slow">GOAL!</div>
+                    <div class="w-14 h-14 bg-white text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 text-xl font-bold rotate-6 shadow-sm">3</div>
+                    <h3 class="font-bold text-xl mb-3">バトンタッチ</h3>
+                    <p class="text-blue-100 font-bold">アポ日時が決まれば完了！<br>あとは責任者が引き継ぎます。</p>
+                    <i class="fas fa-check-circle text-5xl text-blue-300/30 absolute bottom-4 right-4"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-slate-50 px-4 border-y border-slate-200 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div class="floating absolute top-10 -right-20 w-64 h-64 bg-blue-200/40 rounded-full blur-3xl mix-blend-multiply"></div>
+            <div class="floating absolute -bottom-10 -left-20 w-80 h-80 bg-yellow-200/30 rounded-full blur-3xl mix-blend-multiply" style="animation-delay: -3s;"></div>
+        </div>
+
+        <div class="max-w-4xl mx-auto relative z-10">
+            <div class="text-center mb-16 animate-on-scroll">
+                <h2 class="text-4xl font-black text-slate-800 mb-4">実力がフェアに評価される報酬体系</h2>
+                <p class="text-lg text-slate-500">年齢・学歴一切不問。出した成果がすべての世界。</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-sm border-l-8 border-slate-300 flex items-center gap-6 transition-all hover:shadow-md hover:translate-x-2 duration-300 animate-on-scroll delay-100">
+                    <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 text-3xl flex-shrink-0">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-1">
+                            <span class="bg-slate-200 text-slate-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">BASE REWARD</span>
+                            <h3 class="font-bold text-xl text-slate-700">アポイント報酬</h3>
+                        </div>
+                        <p class="text-slate-500 font-medium">成約に至らなくても、質の高い商談設定ができれば発生。</p>
+                    </div>
+                </div>
+
+                <div class="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-md border-l-8 border-blue-400 flex items-center gap-6 transition-all hover:shadow-lg hover:translate-x-2 duration-300 animate-on-scroll delay-200">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 text-3xl flex-shrink-0">
+                        <i class="fas fa-gift animate-pulse"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-1">
+                            <span class="bg-blue-100 text-blue-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">BONUS</span>
+                            <h3 class="font-bold text-xl text-blue-900">成約ボーナス</h3>
+                        </div>
+                        <p class="text-slate-600 font-bold">あなたの獲得した案件が決まれば、報酬が加算されます！</p>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-6 shadow-xl border-l-8 border-yellow-400 flex items-center gap-6 text-white transition-all hover:shadow-2xl hover:translate-x-2 duration-300 animate-on-scroll delay-300 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                    <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center text-yellow-400 text-3xl flex-shrink-0 shadow-inner">
+                        <i class="fas fa-crown bounce-slow"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-3 mb-1">
+                            <span class="bg-yellow-400 text-slate-900 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider shadow-sm">HIGH CLASS</span>
+                            <h3 class="font-bold text-xl text-yellow-100">ランクアップ報酬</h3>
+                        </div>
+                        <p class="text-slate-300 font-bold">月間の成約数に応じて、単価そのものが跳ね上がります。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="entry" class="py-24 px-4 bg-white relative">
+        <div class="max-w-3xl mx-auto relative z-10">
+            <div class="text-center mb-12 animate-on-scroll">
+                <h2 class="text-4xl font-black text-slate-800 mb-6">まずは話を聞いてみる</h2>
+                <p class="text-lg text-slate-500 leading-relaxed">
+                    「自分にできるか不安」「もっと詳しく知りたい」<br>
+                    そんな方も、まずはオンライン面談でお話ししましょう。<br>
+                    以下のボタンからメールを作成し、送信してください。
+                </p>
+            </div>
+            
+            <div class="bg-slate-50 p-8 md:p-12 rounded-3xl border-2 border-slate-200 shadow-lg animate-on-scroll delay-200 hover:border-blue-300 transition-colors duration-300">
+                <p class="text-lg font-bold text-slate-700 mb-8 text-center flex items-center justify-center">
+                    <i class="fas fa-check-circle text-blue-500 text-2xl mr-3"></i>メールには以下の4点を自動入力します
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10 text-slate-600 font-medium">
+                    <div class="bg-white px-6 py-4 rounded-xl border border-slate-100 flex items-center shadow-sm"><span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold mr-4">1</span>氏名</div>
+                    <div class="bg-white px-6 py-4 rounded-xl border border-slate-100 flex items-center shadow-sm"><span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold mr-4">2</span>大学・学部・学年</div>
+                    <div class="bg-white px-6 py-4 rounded-xl border border-slate-100 flex items-center shadow-sm"><span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold mr-4">3</span>電話番号</div>
+                    <div class="bg-white px-6 py-4 rounded-xl border border-slate-100 flex items-center shadow-sm"><span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold mr-4">4</span>面談希望日時（候補3つ）</div>
+                </div>
+
+                <a href="mailto:campustocommunityshizuoka@gmail.com?subject=【学生ビジネスパートナー応募】氏名&body=担当者様%0D%0A%0D%0AHPを見て連絡しました。%0D%0A下記の内容で面談を希望します。%0D%0A%0D%0A1. 氏名：%0D%0A2. 大学・学部・学年：%0D%0A3. 電話番号：%0D%0A4. 面談希望日時（候補を3つほど）：%0D%0A%0D%0Aよろしくお願いいたします." 
+                   class="block w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-bold text-xl py-6 rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 text-center group pulse-btn">
+                    <i class="fas fa-paper-plane mr-3 group-hover:translate-x-1 transition-transform"></i> メーラーを起動して応募する
+                </a>
+                <p class="mt-6 text-center text-sm text-slate-400">
+                    ※起動しない場合は <span class="select-all font-mono text-slate-600 bg-slate-100 px-2 py-1 rounded">campustocommunityshizuoka@gmail.com</span> までご連絡ください。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-900 py-16 text-center px-4 text-slate-400 relative overflow-hidden">
+        <div class="max-w-4xl mx-auto relative z-10">
+            <div class="mb-12 border-b border-slate-800 pb-12 animate-on-scroll">
+                <p class="text-xs font-bold tracking-widest uppercase mb-8 text-slate-500">Strategic Partner</p>
+                
+                <div class="flex flex-col items-center">
+                    <p class="text-sm mb-4 font-bold text-slate-300">業務提携企業</p>
+                    <a href="https://kisyou-kikaku.jp/" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-4 bg-white/5 hover:bg-white/10 px-10 py-6 rounded-2xl transition-all duration-300 border border-white/10 hover:border-blue-500/50 hover:shadow-lg hover:-translate-y-1">
+                        <span class="text-2xl font-bold text-white group-hover:text-blue-300 transition-colors">皆昇企画株式会社</span>
+                        <i class="fas fa-external-link-alt text-sm group-hover:text-blue-300 transition-colors"></i>
+                    </a>
+                    <p class="text-xs mt-4 text-slate-600">※公式サイトへ遷移します</p>
+                </div>
+            </div>
+
+            <div class="text-sm animate-on-scroll delay-100">
+                <p class="mb-2">Operating by Shizuoka Connect</p>
+                <p>&copy; 2025 Shizuoka Connect. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15 // 要素が15%見えたら発火
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target); // 一度表示したら監視を終了
+                    }
+                });
+            }, observerOptions);
+
+            const targets = document.querySelectorAll('.animate-on-scroll');
+            targets.forEach(target => {
+                observer.observe(target);
+            });
+        });
+    </script>
+
+</body>
+</html>
